@@ -4,6 +4,10 @@
 - [Viper - Module to save configuration](https://github.com/spf13/viper)
 - [PromptUI - Interactive prompt for CLI](https://github.com/spf13/viper)
 
+## Install
+- Get executable file from [releases](https://github.com/alex-dna-tech/milvus-cli/releases)
+- Use [docker container](https://hub.docker.com/r/dnat4/milvus-cli)
+
 ## TODO (use golang [sdk](https://github.com/milvus-io/milvus-sdk-go) or [protobuf](https://github.com/milvus-io/milvus-proto/tree/master/go-api) client)
 [Python example)(https://milvus.io/docs/cli_commands.md)
 ### Calc command
@@ -12,8 +16,6 @@
 - [ ] calc mkts_from_unixtime
 - [ ] calc hybridts_to_unixtime
 
-- [ ] clear
-- ~~connect~~
 ### Create command
 - [ ] create user
 - [ ] create alias
@@ -33,23 +35,12 @@
 - [ ] describe collection
 - [ ] describe partition
 - [ ] describe index
-- ~~exit~~
-- ~~help~~
 
-- [ ] import
-
-## List command
+### List command
 - [ ] list users
 - [ ] list collections
 - [ ] list indexes
 - [ ] list partitions
-
-- [ ] load
-- [ ] load_balance
-
-- [ ] query
-- [ ] release
-- [ ] search
 
 ### Show command
 - [ ] show connection
@@ -57,8 +48,18 @@
 - [ ] show loading_progress
 - [ ] show query_segment
 
+### Other command
+- [ ] load
+- [ ] load_balance
+- [ ] query
+- [ ] release
+- [ ] search
+- [ ] import
 - [ ] version
-
+- [ ] clear
+- ~~connect~~
+- ~~exit~~
+- ~~help~~
 
 ## Combine [Milvus backup](https://github.com/zilliztech/milvus-backup) REST API example
 
