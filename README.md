@@ -1,0 +1,2 @@
+# milvus-cli
+Milvus CLI
