@@ -18,3 +18,12 @@ universal_binaries:
 
 checksum:
   name_template: 'checksums.txt'
+
+dockers:
+  - image_templates:
+      - "dnat4/milvus-cli:{{ .Tag }}"
+      - "dnat4/milvus-cli:v{{ .Major }}"
+      - "dnat4/milvus-cli:v{{ .Major }}.{{ .Minor }}"
+      - "dnat4/milvus-cli:latest"
+
+report_sizes: true

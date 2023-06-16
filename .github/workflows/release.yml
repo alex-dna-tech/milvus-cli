@@ -22,6 +22,10 @@ jobs:
       - uses: actions/setup-go@v4
         with:
           go-version: stable
+      - name: Login to Docker Registry
+        run: |
+          echo "${{ secrets.DOCKER_TOKEN }}" | \
+          docker login -u dnat4 --password-stdin
       # More assembly might be required: Docker logins, GPG, etc. It all depends
       # on your needs.
       - uses: goreleaser/goreleaser-action@v4
@@ -32,4 +36,3 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.PUBLISHER_TOKEN }}
-
