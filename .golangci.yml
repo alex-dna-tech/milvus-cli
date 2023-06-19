@@ -5,7 +5,6 @@ linters:
   disable-all: true
   enable:
     - bodyclose
-    - depguard
     - dogsled
     - dupl
     - errcheck
@@ -34,6 +33,7 @@ linters:
     - whitespace
     # don't enable:
     # - asciicheck
+    # - depguard
     # - scopelint
     # - gochecknoinits
     # - gochecknoglobals
