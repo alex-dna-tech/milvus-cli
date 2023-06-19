@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"unicode"
 
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -36,57 +37,15 @@ func config(cmd *cobra.Command, args []string) error {
 	)
 
 	// Get url flag or prompt
-	url, err = cmd.Flags().GetString("url")
+	url, err = FlagOrPrompt(cmd, "url", "", "URL (host:port)", urlValidate)
 	if err != nil {
-		fmt.Printf("URL Flag GetString error: %v\n", err)
 		return err
-	}
-	url = strings.TrimSpace(url)
-	if url == "" {
-		urlPrompt := promptui.Prompt{
-			Label:    "URL (host:port)",
-			Validate: urlValidate,
-		}
-		url, err = urlPrompt.Run()
-		if err != nil {
-			fmt.Printf("URL prompt Run error: %v\n", err)
-			return err
-		}
-		url = strings.TrimSpace(url)
-	} else {
-		err = urlValidate(url)
-		if err != nil {
-			fmt.Printf("URL validation error: %v\n", err)
-			return err
-		}
 	}
 
 	// Get alias flag or prompt
-	alias, err = cmd.Flags().GetString("alias")
+	alias, err = FlagOrPrompt(cmd, "alias", "default", "URL (host:port)", urlValidate)
 	if err != nil {
-		fmt.Printf("Alias Flag GetString error: %v\n", err)
 		return err
-	}
-	alias = strings.TrimSpace(alias)
-	if alias == "" {
-		aliasPrompt := promptui.Prompt{
-			Label:    "Alias",
-			Validate: aliasValidate,
-			Default:  "default",
-		}
-
-		alias, err = aliasPrompt.Run()
-		if err != nil {
-			fmt.Printf("Alias prompt Run error: %v\n", err)
-			return err
-		}
-		alias = strings.TrimSpace(alias)
-	} else {
-		err = aliasValidate(alias)
-		if err != nil {
-			fmt.Printf("Alias validation error: %v\n", err)
-			return err
-		}
 	}
 
 	viper.Set("client."+alias+".url", url)
@@ -100,26 +59,26 @@ func config(cmd *cobra.Command, args []string) error {
 // Validate URL
 func urlValidate(input string) error {
 	if input == "" {
-		return errors.New("Empty URL input")
+		return errors.New("empty URL input")
 	}
 
 	s := strings.Split(input, ":")
 	if len(s) != 2 {
-		return errors.New("Input must be host:port")
+		return errors.New("input must be host:port")
 	}
 	if s[0] == "" {
-		return errors.New("Host must be not empty")
+		return errors.New("host must be not empty")
 	}
 	//TODO: check host to be valid hostname on IP
 	if s[1] == "" {
-		return errors.New("Port must be not empty")
+		return errors.New("port must be not empty")
 	}
 	p, err := strconv.Atoi(s[1])
 	if err != nil {
-		return errors.New("Port must be a number")
+		return errors.New("port must be a number")
 	}
 	if p < 0 || p > 65536 {
-		return errors.New("Port must be in range 0-65535")
+		return errors.New("port must be in range 0-65535")
 	}
 	return nil
 }
@@ -127,7 +86,45 @@ func urlValidate(input string) error {
 // Validate alias
 func aliasValidate(input string) error {
 	if input == "" {
-		return errors.New("Empty alias input")
+		return errors.New("empty alias input")
 	}
 	return nil
+}
+
+func FlagOrPrompt(cmd *cobra.Command, pFlag, pDefault, pLabel string,
+	pValidate func(string) error) (string, error) {
+	p, err := cmd.Flags().GetString(pFlag)
+	if err != nil {
+		fmt.Printf("%s flag GetString error: %v\n", capitalize(pFlag), err)
+		return "", err
+	}
+	p = strings.TrimSpace(p)
+	if p == "" {
+		pPrompt := promptui.Prompt{
+			Label:    pLabel,
+			Validate: pValidate,
+		}
+
+		if pDefault != "" {
+			pPrompt.Default = pDefault
+		}
+		p, err = pPrompt.Run()
+		if err != nil {
+			fmt.Printf("%s prompt Run error: %v\n", capitalize(pFlag), err)
+			return "", err
+		}
+	} else {
+		err = pValidate(p)
+		if err != nil {
+			fmt.Printf("%s validation error: %v\n", capitalize(pFlag), err)
+			return "", err
+		}
+	}
+	return p, nil
+}
+
+func capitalize(str string) string {
+	runes := []rune(str)
+	runes[0] = unicode.ToUpper(runes[0])
+	return string(runes)
 }

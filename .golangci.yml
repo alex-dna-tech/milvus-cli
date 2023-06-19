@@ -4,45 +4,50 @@ run:
 linters:
   disable-all: true
   enable:
-    #- bodyclose
-    - deadcode
-    #- depguard
-    #- dogsled
-    #- dupl
+    - bodyclose
+    - depguard
+    - dogsled
+    - dupl
     - errcheck
-    #- exhaustive
-    #- funlen
-    - gas
-    #- gochecknoinits
+    - exportloopref
+    - funlen
     - goconst
-    #- gocritic
-    #- gocyclo
-    #- gofmt
+    - gocritic
+    - gocyclo
+    - gofmt
     - goimports
-    - golint
-    #- gomnd
-    #- goprintffuncname
-    #- gosec
-    #- gosimple
+    - goprintffuncname
+    - gosec
+    - gosimple
     - govet
     - ineffassign
-    - interfacer
-    #- lll
-    - maligned
-    - megacheck
-    #- misspell
-    #- nakedret
-    #- noctx
-    #- nolintlint
-    #- rowserrcheck
-    #- scopelint
-    #- staticcheck
-    - structcheck
-    #- stylecheck
-    #- typecheck
+    - misspell
+    - nakedret
+    - noctx
+    - nolintlint
+    - staticcheck
+    - stylecheck
+    - typecheck
     - unconvert
-    #- unparam
-    #- unused
-    - varcheck
-    #- whitespace
+    - unparam
+    - unused
+    - whitespace
+    # don't enable:
+    # - asciicheck
+    # - scopelint
+    # - gochecknoinits
+    # - gochecknoglobals
+    # - gocognit
+    # - godot
+    # - godox
+    # - goerr113
+    # - gomnd
+    # - interfacer
+    # - lll
+    # - maligned
+    # - nestif
+    # - prealloc
+    # - revive
+    # - testpackage
+    # - wsl
   fast: false
