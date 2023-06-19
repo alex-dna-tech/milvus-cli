@@ -18,60 +18,7 @@ import (
 var configCmd = &cobra.Command{
 	Use:   "config [flags]",
 	Short: "Set connection parameters",
-	Run: func(cmd *cobra.Command, args []string) {
-		var (
-			url, alias string
-			err        error
-		)
-
-		// Get url flag or prompt
-		url, err = cmd.Flags().GetString("url")
-		if err != nil {
-			fmt.Printf("URL FlagGetString error: %v\n", err)
-			return
-		}
-		if url == "" {
-			fmt.Printf("URL flag not set %v\n", err)
-
-			urlPrompt := promptui.Prompt{
-				Label:    "URL (host:port)",
-				Validate: urlValidate,
-			}
-
-			url, err = urlPrompt.Run()
-		} else {
-			err = urlValidate(url)
-			if err != nil {
-				fmt.Printf("URL validation error: %v\n", err)
-				return
-			}
-		}
-
-		// Get alias flag or prompt
-		alias, err = cmd.Flags().GetString("alias")
-		if err != nil {
-			fmt.Printf("Alias FlagGetString error: %v\n", err)
-			return
-		}
-		if alias == "" {
-			aliasPrompt := promptui.Prompt{
-				Label:    "Alias",
-				Validate: aliasValidate,
-				Default:  "default",
-			}
-
-			alias, err = aliasPrompt.Run()
-		} else {
-			err = aliasValidate(alias)
-			if err != nil {
-				fmt.Printf("Alias validation error: %v\n", err)
-				return
-			}
-		}
-
-		viper.Set("client."+alias+".url", url)
-		viper.WriteConfig()
-	},
+	Run:   config,
 }
 
 func init() {
@@ -79,6 +26,71 @@ func init() {
 	configCmd.Flags().StringP("alias", "a", "", "Alias")
 
 	rootCmd.AddCommand(configCmd)
+}
+
+func config(cmd *cobra.Command, args []string) {
+	var (
+		url, alias string
+
+		err error
+	)
+
+	// Get url flag or prompt
+	url, err = cmd.Flags().GetString("url")
+	if err != nil {
+		fmt.Printf("URL Flag GetString error: %v\n", err)
+		return
+	}
+	url = strings.TrimSpace(url)
+	if url == "" {
+		urlPrompt := promptui.Prompt{
+			Label:    "URL (host:port)",
+			Validate: urlValidate,
+		}
+		url, err = urlPrompt.Run()
+		if err != nil {
+			fmt.Printf("URL prompt Run error: %v\n", err)
+			return
+		}
+		url = strings.TrimSpace(url)
+	} else {
+		err = urlValidate(url)
+		if err != nil {
+			fmt.Printf("URL validation error: %v\n", err)
+			return
+		}
+	}
+
+	// Get alias flag or prompt
+	alias, err = cmd.Flags().GetString("alias")
+	if err != nil {
+		fmt.Printf("Alias Flag GetString error: %v\n", err)
+		return
+	}
+	alias = strings.TrimSpace(alias)
+	if alias == "" {
+		aliasPrompt := promptui.Prompt{
+			Label:    "Alias",
+			Validate: aliasValidate,
+			Default:  "default",
+		}
+
+		alias, err = aliasPrompt.Run()
+		if err != nil {
+			fmt.Printf("Alias prompt Run error: %v\n", err)
+			return
+		}
+		alias = strings.TrimSpace(alias)
+	} else {
+		err = aliasValidate(alias)
+		if err != nil {
+			fmt.Printf("Alias validation error: %v\n", err)
+			return
+		}
+	}
+
+	viper.Set("client."+alias+".url", url)
+	viper.WriteConfig()
 }
 
 // Validate URL
@@ -102,7 +114,7 @@ func urlValidate(input string) error {
 	if err != nil {
 		return errors.New("Port must be a number")
 	}
-	if p < 0 && p > 65536 {
+	if p < 0 || p > 65536 {
 		return errors.New("Port must be in range 0-65535")
 	}
 	return nil
