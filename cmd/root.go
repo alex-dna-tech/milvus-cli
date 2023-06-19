@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
+var cfgFile, clientAlias string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -32,6 +32,7 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.milvus-cli.yml)")
+	rootCmd.PersistentFlags().StringVarP(&clientAlias, "client", "c", "default", "client alias stored in config")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -62,5 +63,8 @@ func initConfig() {
 	// Overwrite if environment variable is set
 	viper.AutomaticEnv()
 
-	viper.SafeWriteConfig()
+	err := viper.SafeWriteConfig()
+	if err != nil {
+		return
+	}
 }

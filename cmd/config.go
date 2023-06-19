@@ -18,7 +18,7 @@ import (
 var configCmd = &cobra.Command{
 	Use:   "config [flags]",
 	Short: "Set connection parameters",
-	Run:   config,
+	RunE:  config,
 }
 
 func init() {
@@ -28,7 +28,7 @@ func init() {
 	rootCmd.AddCommand(configCmd)
 }
 
-func config(cmd *cobra.Command, args []string) {
+func config(cmd *cobra.Command, args []string) error {
 	var (
 		url, alias string
 
@@ -39,7 +39,7 @@ func config(cmd *cobra.Command, args []string) {
 	url, err = cmd.Flags().GetString("url")
 	if err != nil {
 		fmt.Printf("URL Flag GetString error: %v\n", err)
-		return
+		return err
 	}
 	url = strings.TrimSpace(url)
 	if url == "" {
@@ -50,14 +50,14 @@ func config(cmd *cobra.Command, args []string) {
 		url, err = urlPrompt.Run()
 		if err != nil {
 			fmt.Printf("URL prompt Run error: %v\n", err)
-			return
+			return err
 		}
 		url = strings.TrimSpace(url)
 	} else {
 		err = urlValidate(url)
 		if err != nil {
 			fmt.Printf("URL validation error: %v\n", err)
-			return
+			return err
 		}
 	}
 
@@ -65,7 +65,7 @@ func config(cmd *cobra.Command, args []string) {
 	alias, err = cmd.Flags().GetString("alias")
 	if err != nil {
 		fmt.Printf("Alias Flag GetString error: %v\n", err)
-		return
+		return err
 	}
 	alias = strings.TrimSpace(alias)
 	if alias == "" {
@@ -78,19 +78,23 @@ func config(cmd *cobra.Command, args []string) {
 		alias, err = aliasPrompt.Run()
 		if err != nil {
 			fmt.Printf("Alias prompt Run error: %v\n", err)
-			return
+			return err
 		}
 		alias = strings.TrimSpace(alias)
 	} else {
 		err = aliasValidate(alias)
 		if err != nil {
 			fmt.Printf("Alias validation error: %v\n", err)
-			return
+			return err
 		}
 	}
 
 	viper.Set("client."+alias+".url", url)
-	viper.WriteConfig()
+	err = viper.WriteConfig()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // Validate URL
