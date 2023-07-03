@@ -3,7 +3,7 @@ testdata_dir = "testdata"
 tmp_dir = "tmp"
 
 [build]
-args_bin = []
+args_bin = ["debug"]
 bin = "./tmp/milvus-cli"
 cmd = "go build -o ./tmp/milvus-cli ."
 delay = 0
