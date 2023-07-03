@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -13,11 +10,13 @@ import (
 var calcCmd = &cobra.Command{
 	Use:   "calc",
 	Short: "Calculates the distance between two vector arrays",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("calc called")
-	},
+	Run:   calc,
 }
 
 func init() {
 	rootCmd.AddCommand(calcCmd)
+}
+
+func calc(cmd *cobra.Command, args []string) {
+	fmt.Println("calc called")
 }

@@ -1,3 +1,4 @@
+// Package cmd creates cobra Commands
 package cmd
 
 import (
@@ -10,6 +11,8 @@ import (
 
 var cfgFile, clientAlias string
 
+// var viperConfig *viper.Viper
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "milvus-cli",
@@ -19,8 +22,13 @@ database connection, data operations, and import and export of data.
 
 Based on Milvus Goland SDK, it allows the execution of commands through a
 terminal using interactive command-line prompts.`,
+	// Uncomment the following line if your bare application
+	// has an action associated with it:
+	//	Run: func(cmd *cobra.Command, args []string) { },
 }
 
+// Execute adds all child commands to the root command and sets flags appropriately.
+// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
@@ -57,7 +65,7 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+		fmt.Fprintf(os.Stderr, "Using: config file - \"%s\", server alias - \"%s\"\n", viper.ConfigFileUsed(), clientAlias)
 	}
 
 	// Overwrite if environment variable is set

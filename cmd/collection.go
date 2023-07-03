@@ -41,8 +41,8 @@ func init() {
 	collectionCreateCmd.Flags().StringP("primary", "p", "", "The name of the primary key field.")
 	collectionCreateCmd.Flags().BoolP("autoid", "a", false, "(Optional) Flag to generate IDs automatically.")
 	collectionCreateCmd.Flags().StringP("desc", "d", "", "(Optional) The description of the collection.")
-	createCmd.AddCommand(collectionCreateCmd)
 
+	createCmd.AddCommand(collectionCreateCmd)
 	deleteCmd.AddCommand(collectionDeleteCmd)
 	describeCmd.AddCommand(collectionDescribeCmd)
 	listCmd.AddCommand(collectionListCmd)

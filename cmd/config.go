@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -17,14 +14,15 @@ import (
 
 // configCmd represents the config command
 var configCmd = &cobra.Command{
-	Use:   "config [flags]",
-	Short: "Set connection parameters",
-	RunE:  config,
+	Use:     "config [flags]",
+	Aliases: []string{"cfg"},
+	Short:   "Set connection parameters",
+	RunE:    config,
 }
 
 func init() {
 	configCmd.Flags().StringP("url", "u", "", "URL host:port")
-	configCmd.Flags().StringP("alias", "a", "", "Alias")
+	configCmd.Flags().StringP("alias", "a", "", "Server connection alias")
 
 	rootCmd.AddCommand(configCmd)
 }
@@ -32,8 +30,7 @@ func init() {
 func config(cmd *cobra.Command, args []string) error {
 	var (
 		url, alias string
-
-		err error
+		err        error
 	)
 
 	// Get url flag or prompt
@@ -43,7 +40,7 @@ func config(cmd *cobra.Command, args []string) error {
 	}
 
 	// Get alias flag or prompt
-	alias, err = FlagOrPrompt(cmd, "alias", "default", "URL (host:port)", urlValidate)
+	alias, err = FlagOrPrompt(cmd, "alias", "default", "Alias", aliasValidate)
 	if err != nil {
 		return err
 	}

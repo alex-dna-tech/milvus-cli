@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -11,13 +8,15 @@ import (
 
 // deleteCmd represents the delete command
 var deleteCmd = &cobra.Command{
-	Use:   "delete",
-	Short: "Delete milvus elements",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("delete called")
-	},
+	Use:     "delete",
+	Aliases: []string{"del", "d"},
+	Short:   "Delete milvus elements",
+	Run:     del,
 }
 
 func init() {
 	rootCmd.AddCommand(deleteCmd)
+}
+func del(cmd *cobra.Command, args []string) {
+	fmt.Println("delete called")
 }

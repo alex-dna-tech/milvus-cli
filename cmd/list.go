@@ -1,6 +1,3 @@
-/*
-Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
@@ -11,13 +8,16 @@ import (
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List milvus elements",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list called")
-	},
+	Use:     "list",
+	Aliases: []string{"ls", "l"},
+	Short:   "List milvus elements",
+	Run:     list,
 }
 
 func init() {
 	rootCmd.AddCommand(listCmd)
+}
+
+func list(cmd *cobra.Command, args []string) {
+	fmt.Println("list called")
 }
