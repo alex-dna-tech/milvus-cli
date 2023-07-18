@@ -55,7 +55,7 @@
 - [ ] release
 - [ ] search
 - [ ] import
-- [ ] version
+- [x] version
 - [ ] clear
 - ~~connect~~
 - ~~exit~~
