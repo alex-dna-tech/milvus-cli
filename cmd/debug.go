@@ -5,12 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	"alex-dna-tech/milvus-cli/internal/client"
+	client "github.com/alex-dna-tech/milvus-client"
 
 	pb "github.com/milvus-io/milvus-proto/go-api/v2/milvuspb"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // debugCmd represents the debug command
@@ -21,19 +20,16 @@ var debugCmd = &cobra.Command{
 }
 
 func debug(cmd *cobra.Command, args []string) {
-	target := viper.GetString("client." + clientAlias + ".url")
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	c, err := client.New(target)
+	c, err := client.New(ctx, getServerURL())
 	cobra.CheckErr(err)
+	defer c.Close()
+
 	resp, err := c.ShowCollections(ctx, &pb.ShowCollectionsRequest{})
 	cobra.CheckErr(err)
 	fmt.Printf("Response-> %#v\nError-> %#v\n", resp.CollectionNames, err)
-	err = c.Close()
-	if err != nil {
-		return
-	}
 }
 
 func init() {

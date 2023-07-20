@@ -2,12 +2,9 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"strconv"
 	"strings"
-	"unicode"
 
-	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -34,13 +31,13 @@ func config(cmd *cobra.Command, args []string) error {
 	)
 
 	// Get url flag or prompt
-	url, err = FlagOrPrompt(cmd, "url", "", "URL (host:port)", urlValidate)
+	url, err = getStringVal(cmd, "url", "", "URL (host:port)", urlValidate)
 	if err != nil {
 		return err
 	}
 
 	// Get alias flag or prompt
-	alias, err = FlagOrPrompt(cmd, "alias", "default", "Alias", aliasValidate)
+	alias, err = getStringVal(cmd, "alias", "default", "Alias", aliasValidate)
 	if err != nil {
 		return err
 	}
@@ -86,42 +83,4 @@ func aliasValidate(input string) error {
 		return errors.New("empty alias input")
 	}
 	return nil
-}
-
-func FlagOrPrompt(cmd *cobra.Command, pFlag, pDefault, pLabel string,
-	pValidate func(string) error) (string, error) {
-	p, err := cmd.Flags().GetString(pFlag)
-	if err != nil {
-		fmt.Printf("%s flag GetString error: %v\n", capitalize(pFlag), err)
-		return "", err
-	}
-	p = strings.TrimSpace(p)
-	if p == "" {
-		pPrompt := promptui.Prompt{
-			Label:    pLabel,
-			Validate: pValidate,
-		}
-
-		if pDefault != "" {
-			pPrompt.Default = pDefault
-		}
-		p, err = pPrompt.Run()
-		if err != nil {
-			fmt.Printf("%s prompt Run error: %v\n", capitalize(pFlag), err)
-			return "", err
-		}
-	} else {
-		err = pValidate(p)
-		if err != nil {
-			fmt.Printf("%s validation error: %v\n", capitalize(pFlag), err)
-			return "", err
-		}
-	}
-	return p, nil
-}
-
-func capitalize(str string) string {
-	runes := []rune(str)
-	runes[0] = unicode.ToUpper(runes[0])
-	return string(runes)
 }

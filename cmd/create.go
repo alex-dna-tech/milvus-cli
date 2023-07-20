@@ -1,34 +1,36 @@
 package cmd
 
 import (
-	"fmt"
-
+	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 // createCmd represents the create command
 var createCmd = &cobra.Command{
-	Use:   "create",
-	Short: "Create milvus elements",
-	Run: func(cmd *cobra.Command, args []string) {
-		target := viper.GetString("client." + clientAlias + ".url")
-
-		client, err := client.NewMilvusClient(target)
-		defer client.Close()
-		cobra.CheckErr(err)
-
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		defer cancel()
-
-		resp, err := client.GetVersion(ctx)
-		cobra.CheckErr(err)
-		fmt.Printf("#-> %#v\n%#v\n", resp, err)
-		fmt.Println("create called")
-		// fmt.Printf("conf.client: %#v\n", viper.Get("client"))
-	},
+	Use:     "create",
+	Aliases: []string{"add", "c"},
+	Short:   "Create milvus elements",
+	Run:     create,
 }
 
 func init() {
 	rootCmd.AddCommand(createCmd)
+}
+
+func create(cmd *cobra.Command, args []string) {
+	items := []string{"collection", "partition"}
+	prompt := promptui.Select{
+		Label: "Create",
+		Items: items,
+	}
+
+	_, create, err := prompt.Run()
+	cobra.CheckErr(err)
+
+	switch create {
+	case "collection":
+		collectionCreateCmd.Run(collectionCreateCmd, []string{})
+	case "partition":
+		partitionCreateCmd.Run(partitionCreateCmd, []string{})
+	}
 }

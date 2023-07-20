@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/alex-dna-tech/milvus-client v0.0.3
+	github.com/golang/protobuf v1.5.3
 	github.com/manifoldco/promptui v0.9.0
 	github.com/milvus-io/milvus-proto/go-api/v2 v2.2.11
 	github.com/spf13/cobra v1.7.0
@@ -15,7 +16,6 @@ require (
 	github.com/chzyer/readline v1.5.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
